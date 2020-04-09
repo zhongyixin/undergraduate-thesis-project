@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="/static/echarts.min.js"></script>
+    <script src="/static/bootstrap/js/jquery-2.1.1.js"></script>
+</head>
+<body>
+    
+<label for="byear">查询日期选择</label>
+<form method="GET"  id="shaixuan" >
+<select id="byear" name="byear">
+    {% for year in years %}
+    <option value="{{ year }}">{{ year }}</option>
+    {% endfor %}
+</select>
+<select id="bmonth" name="bmonth">
+    {% for month in months %}
+    <option value="{{ month }}">{{ month }}</option>
+    {% endfor %}
+</select>
+<select id="bday" name="bday">
+    {% for day in days %}
+    <option value="{{ day }}">{{ day }}</option>
+    {% endfor %}
+</select>
+{{error}}<br>
+    <button type="submit" id="chaxun" class="btn btn-primary block full-width m-b">查询</button>
+<p id="list_result"></p>
+{% csrf_token %}
+</form>  
+    <div id="test_8" style="width: 1000px;height: 600px"></div>
+
+   <script>$.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});</script>
+   <script type="text/javascript">
+   $(function(){
+     // var time_lst=[];
+      //var ds_lst=[];
+      //var actualVolume_lst=[];
+      var dom = document.getElementById("test_8");
+      var myChart = echarts.init(dom);
+      var app = {};
+      option = null;
+      option = {
+          title: {
+              text: '折线图堆叠'
+          },
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              data:['饱和度','流量']
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          toolbox: {
+              feature: {
+                  saveAsImage: {}
+              }
+          },
+          xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: {{time_lst|safe}}
+          },
+          yAxis: {
+              type: 'value'
+          },
+          series: [
+              {
+                  name:'饱和度',
+                  type:'line',
+                  stack: '总量',
+                  data: {{ds_lst|safe}}
+              },
+              {
+                  name:'流量',
+                  type:'line',
+                  stack: '总量',
+                  data:{{actualVolume_lst|safe}}
+              }
+          ]
+      };
+      myChart.setOption(option, true);
+      //myChart.showLoading(); 
+     var ret;
+        $('#shaixuan').submit(function () {
+            var byear = $("#byear").val();
+            var bmonth = $("#bmonth").val();
+            var bday = $("#bday").val();
+            //$.get('/search/',{'byear':byear,'bmonth':bmonth,'bday':bday},function(ret){
+                $.ajax({
+                    type: 'GET',
+                    url: '/search/',
+                    dataType:'json',
+                    success: function (json) {
+                        ret= eval(json);
+                    }
+                });
+   
+                //for(var i=0;i<ret.time_lst.length;i++){
+                //    time_lst.push(ret.time_lst[i]);
+                //}
+                //for(var i=0;i<ret.ds_lst.length;i++){
+                //    ds_lst.push(ret.ds_lst[i]);
+                    //$('#list_result').append(' ' + ret.ds_lst[i])
+                //}
+                //for(var i=0;i<ret.actualVolume_lst.length;i++){
+                //    actualVolume_lst.push(ret.actualVolume_lst[i]);
+                //}
+                option.xAxis.data = ret.time_lst;
+                option.series[0].data = ret.ds_lst;
+                option.series[1].data = ret.actualVolume_lst;
+                //myChart.hideLoading();
+                myChart.setOption(option,true);        //加载数据图表
+                //        xAxis: {
+                //            data: time_lst
+                //        },
+                //        series: [{
+                            // 根据名字对应到相应的系列
+                //            name: '饱和度',
+                //            data: ds_lst
+                //        },
+                //        {
+                //            name: '流量',
+                //            data: actualVolume_lst
+                //        }]
+                //    });
+        });
+    //myChart.setOption(option, true);
+});
+     </script>
+     
+</body>
+</html>

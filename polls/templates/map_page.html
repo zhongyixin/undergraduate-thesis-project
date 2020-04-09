@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>zyx | 监管区域地图</title>
+
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/animate.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=cuchNdNOCPPp9AUcIi5GSpYZ1lAngZv3"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+
+</head>
+
+<body class="">
+
+    <div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <img alt="image" class="rounded-circle" src="/static/bootstrap/img/zyx.jpg"/>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="block m-t-xs font-bold">ZHONG YIXIN</span>
+                            <span class="text-muted text-xs block">管理员 <b class="caret"></b></span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a class="dropdown-item" href="/introduction/">个人信息</a></li>
+                            <li><a class="dropdown-item" href="/mailbox/">信箱</a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/">登出</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">
+                        IN+
+                    </div>
+                </li>
+                <li class="active">
+                    <a href="/map_page/"><i class="fa fa-files-o"></i> <span class="nav-label">监管区域地图</span></a>
+                </li>
+                <li>
+                    <a href="/dashboard_2/"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">数据图表查询</span> </a>
+                </li>
+                <li>
+                    <a href="/predict/"><i class="fa fa-desktop"></i> <span class="nav-label">单路口信号预测</span></a>
+                </li>
+                <li>
+                    <a href="/predict_m/"><i class="fa fa-flask"></i> <span class="nav-label">多路口协调预测</span></a>
+                </li>
+                <li>
+                    <a href="/test/"><i class="fa fa-th-large"></i> <span class="nav-label">测试页</span>  </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+                <div class="row border-bottom">
+                        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                        <div class="navbar-header">
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                            <form role="search" class="navbar-form-custom" action="search_results.html">
+                                <div class="form-group">
+                                    <input type="text" placeholder="请输入搜索内容" class="form-control" name="top-search" id="top-search">
+                                </div>
+                            </form>
+                        </div>
+                        <ul class="nav navbar-top-links navbar-right">
+                                <li>
+                                    <span class="m-r-sm text-muted welcome-message">欢迎来到xxx道路交通信号调控方案及预测管理后台</span>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <i class="fa fa-sign-out"></i> 注销
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                
+                        </nav>
+                        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-sm-8">
+                    <h2>路口地图</h2>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">杭州市</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <strong>下城区</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-sm-4">
+                        <div class="ibox-content float-e-margins">
+                            <p>
+                                <button type="button" onclick="openHeatmap_ds();" class="btn btn-w-m btn-primary">显示饱和度热力图</button>
+                                <button type="button" onclick="openHeatmap_vol();" class="btn btn-w-m btn-primary">显示流量热力图</button>
+                                <button type="button" onclick="closeHeatmap();" class="btn btn-w-m btn-default">关闭热力图</button>
+                                    
+                            </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row border-bottom white-bg dashboard-header">
+                    <div class="col-lg-10">
+                        <div class="ibox ">
+                            <div style="width:1400px;height:700px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+                        </div>
+                    </div>
+                    
+            </div>
+        </div>
+        
+        
+        </div>
+
+    <!-- Mainly scripts -->
+    <script src="/static/bootstrap/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/bootstrap/js/popper.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/bootstrap/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/bootstrap/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/bootstrap/js/inspinia.js"></script>
+    <script src="/static/bootstrap/js/plugins/pace/pace.min.js"></script>
+
+    <script type="text/javascript">
+        //创建和初始化地图函数：
+        function initMap(){
+          createMap();//创建地图
+          setMapEvent();//设置地图事件
+          addMapControl();//向地图添加控件
+          addMapOverlay();//向地图添加覆盖物
+        }
+        function createMap(){ 
+          map = new BMap.Map("map"); 
+          map.centerAndZoom(new BMap.Point(120.187609,30.30000),14);
+        }
+        function setMapEvent(){
+          map.enableScrollWheelZoom();
+          map.enableKeyboard();
+          map.enableDragging();
+          map.enableDoubleClickZoom()
+        }
+        function addClickHandler(target,window){
+          target.addEventListener("click",function(){
+            target.openInfoWindow(window);
+          });
+        }
+        function addMapOverlay(){
+          var markers = [
+          {content:"延安路-体育场路",title:"8",imageOffset: {width:0,height:3},position:{lat:30.276049,lng:120.169922}},
+          {content:"中山北路-体育场路",title:"9",imageOffset: {width:0,height:3},position:{lat:30.275799,lng:120.173453}},
+          {content:"武林路-凤起路",title:"13",imageOffset: {width:0,height:3},position:{lat:30.269395,lng:120.167545}},
+          {content:"延安路-凤起路",title:"14",imageOffset: {width:0,height:3},position:{lat:30.269684,lng:120.170173}},
+          {content:"中山北路-凤起路",title:"15",imageOffset: {width:0,height:3},position:{lat:30.270417,lng:120.175446}},
+          {content:"延安路-庆春路",title:"19",imageOffset: {width:0,height:3},position:{lat:30.264225,lng:120.170546}},
+          {content:"浣纱路-庆春路",title:"20",imageOffset: {width:0,height:3},position:{lat:30.263944,lng:120.174781}},
+          {content:"中河中路-庆春路",title:"22",imageOffset: {width:0,height:3},position:{lat:30.263773,lng:120.178132}},
+          {content:"建国北路-凤起路",title:"27",imageOffset: {width:0,height:3},position:{lat:30.27017,lng:120.187371}},
+          {content:"体育场路-环城东路",title:"68",imageOffset: {width:0,height:3},position:{lat:30.276385,lng:120.193704}},
+          {content:"建国北路-朝晖路",title:"70",imageOffset: {width:0,height:3},position:{lat:30.284416,lng:120.184329}},
+          {content:"文晖路-河东路",title:"71",imageOffset: {width:0,height:3},position:{lat:30.286882,lng:120.172017}},
+          {content:"新市街-上塘路",title:"79",imageOffset: {width:0,height:3},position:{lat:30.29282,lng:120.171866}},
+          {content:"环城北路-朝晖路",title:"106",imageOffset: {width:0,height:3},position:{lat:30.281048,lng:120.192286}},
+          {content:"上塘路路-朝晖路",title:"157",imageOffset: {width:0,height:3},position:{lat:30.282883,lng:120.176498}},
+          {content:"绍兴路-德胜路",title:"194",imageOffset: {width:0,height:3},position:{lat:30.304125,lng:120.174369}},
+          {content:"绍兴路400弄-绍兴路",title:"195",imageOffset: {width:0,height:3},position:{lat:30.307408,lng:120.171425}},
+          {content:"东兴路-德胜路",title:"199",imageOffset: {width:0,height:3},position:{lat:30.307502,lng:120.18382}},
+          {content:"西文街-东兴路",title:"201",imageOffset: {width:0,height:3},position:{lat:30.321685,lng:120.180568}},
+          {content:"中诸葛路-德胜中路",title:"263",imageOffset: {width:0,height:3},position:{lat:30.308714,lng:120.187779}},
+          {content:"石桥路-石大路",title:"319",imageOffset: {width:0,height:3},position:{lat:30.336407,lng:120.199976}},
+          {content:"石祥路-长浜路",title:"320",imageOffset: {width:0,height:3},position:{lat:30.332692,lng:120.184822}},
+          {content:"石祥路-东新路",title:"321",imageOffset: {width:0,height:3},position:{lat:30.330687,lng:120.178298}},
+          {content:"新汇路-石大路",title:"336",imageOffset: {width:0,height:3},position:{lat:30.338661,lng:120.209014}},
+          {content:"中山北路-朝晖路",title:"405",imageOffset: {width:0,height:3},position:{lat:30.282047,lng:120.172573}},
+          {content:"颜三路-碧桃巷",title:"471",imageOffset: {width:0,height:3},position:{lat:30.307502,lng:120.18382}},
+          {content:"颜三路-白石巷",title:"472",imageOffset: {width:0,height:3},position:{lat:30.316509,lng:120.171287}},
+          {content:"西文街-白石巷",title:"474",imageOffset: {width:0,height:3},position:{lat:30.320916,lng:120.171852}},
+          {content:"香积寺路-碧桃巷",title:"475",imageOffset: {width:0,height:3},position:{lat:30.313001,lng:120.176822}},
+          {content:"新汇路-八角亭街",title:"564",imageOffset: {width:0,height:3},position:{lat:30.335114,lng:120.204978}},
+          {content:"新汇路-长华街",title:"565",imageOffset: {width:0,height:3},position:{lat:30.33352,lng:120.204345}},
+          {content:"重机巷-新天地街",title:"647",imageOffset: {width:0,height:3},position:{lat:30.326,lng:120.1829}},
+          {content:"华中南路-长城街",title:"754",imageOffset: {width:0,height:3},position:{lat:30.324422,lng:120.207167}},
+          {content:"俞章路-华中南路",title:"755",imageOffset: {width:0,height:3},position:{lat:30.329731,lng:120.208141}},
+          {content:"东文路-安桥路",title:"920",imageOffset: {width:0,height:3},position:{lat:30.328487,lng:120.181293}},
+          {content:"载歌巷-香积寺路",title:"968",imageOffset: {width:0,height:3},position:{lat:30.313979,lng:120.189692}}
+          
+          ];
+          for(var index = 0; index < markers.length; index++ ){
+            var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+            var marker = new BMap.Marker(point,{icon:new BMap.Icon("http://api.map.baidu.com/lbsapi/createmap/images/icon.png",new BMap.Size(20,25),{
+              imageOffset: new BMap.Size(markers[index].imageOffset.width,markers[index].imageOffset.height)
+            })});
+            var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+            var opts = {
+              width: 200,
+              title: markers[index].title,
+              enableMessage: false
+            };
+            var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+            marker.setLabel(label);
+            addClickHandler(marker,infoWindow);
+            map.addOverlay(marker);
+          };
+        }
+        //向地图添加控件
+        function addMapControl(){
+          var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+          scaleControl.setUnit(BMAP_UNIT_IMPERIAL);
+          map.addControl(scaleControl);
+          var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+          map.addControl(navControl);
+          var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+          map.addControl(overviewControl);
+        }
+        var map;
+          initMap();
+        var points_ds =[
+        {"lng":120.169922,"lat":30.276049,"count":39},
+        {"lng":120.173453,"lat":30.275799,"count":56},
+        {"lng":120.167545,"lat":30.269395,"count":40},
+        {"lng":120.170173,"lat":30.269684,"count":49},
+        {"lng":120.175446,"lat":30.270417,"count":29},
+        {"lng":120.170546,"lat":30.264225,"count":49},
+        {"lng":120.174781,"lat":30.263944,"count":24},
+        {"lng":120.178132,"lat":30.263773,"count":62},
+        {"lng":120.187371,"lat":30.27017,"count":0},
+        {"lng":120.193704,"lat":30.276385,"count":14},
+        {"lng":120.184329,"lat":30.284416,"count":74},
+        {"lng":120.172017,"lat":30.286882,"count":48},
+        {"lng":120.171866,"lat":30.29282,"count":55},
+        {"lng":120.192286,"lat":30.281048,"count":21},
+        {"lng":120.176498,"lat":30.282883,"count":44},
+        {"lng":120.174369,"lat":30.304125,"count":60},
+        {"lng":120.171425,"lat":30.307408,"count":56},
+        {"lng":120.18382,"lat":30.307502,"count":77},
+        {"lng":120.180568,"lat":30.321685,"count":33},
+        {"lng":120.187779,"lat":30.308714,"count":19},
+        {"lng":120.199976,"lat":30.336407,"count":63},
+        {"lng":120.184822,"lat":30.332692,"count":20},
+        {"lng":120.178298,"lat":30.330687,"count":99},
+        {"lng":120.209014,"lat":30.338661,"count":32},
+        {"lng":120.172573,"lat":30.282047,"count":28},
+        {"lng":120.18382,"lat":30.307502,"count":50},
+        {"lng":120.171287,"lat":30.316509,"count":46},
+        {"lng":120.171852,"lat":30.320916,"count":31},
+        {"lng":120.176822,"lat":30.313001,"count":28},
+        {"lng":120.204978,"lat":30.335114,"count":33},
+        {"lng":120.204345,"lat":30.33352,"count":0},
+        {"lng":120.1829,"lat":30.326,"count":32},
+        {"lng":120.207167,"lat":30.324422,"count":20},
+        {"lng":120.208141,"lat":30.329731,"count":0},
+        {"lng":120.181293,"lat":30.328487,"count":53},
+        {"lng":120.189692,"lat":30.313979,"count":40}];
+        var points_vol =[
+        {"lng":120.169922,"lat":30.276049,"count":9},
+        {"lng":120.173453,"lat":30.275799,"count":8},
+        {"lng":120.167545,"lat":30.269395,"count":3},
+        {"lng":120.170173,"lat":30.269684,"count":4},
+        {"lng":120.175446,"lat":30.270417,"count":5},
+        {"lng":120.170546,"lat":30.264225,"count":4},
+        {"lng":120.174781,"lat":30.263944,"count":4},
+        {"lng":120.178132,"lat":30.263773,"count":7},
+        {"lng":120.187371,"lat":30.27017,"count":0},
+        {"lng":120.193704,"lat":30.276385,"count":2},
+        {"lng":120.184329,"lat":30.284416,"count":6},
+        {"lng":120.172017,"lat":30.286882,"count":9},
+        {"lng":120.171866,"lat":30.29282,"count":5},
+        {"lng":120.192286,"lat":30.281048,"count":2},
+        {"lng":120.176498,"lat":30.282883,"count":5},
+        {"lng":120.174369,"lat":30.304125,"count":6},
+        {"lng":120.171425,"lat":30.307408,"count":9},
+        {"lng":120.18382,"lat":30.307502,"count":5},
+        {"lng":120.180568,"lat":30.321685,"count":3},
+        {"lng":120.187779,"lat":30.308714,"count":4},
+        {"lng":120.199976,"lat":30.336407,"count":5},
+        {"lng":120.184822,"lat":30.332692,"count":4},
+        {"lng":120.178298,"lat":30.330687,"count":5},
+        {"lng":120.209014,"lat":30.338661,"count":3},
+        {"lng":120.172573,"lat":30.282047,"count":6},
+        {"lng":120.18382,"lat":30.307502,"count":3},
+        {"lng":120.171287,"lat":30.316509,"count":7},
+        {"lng":120.171852,"lat":30.320916,"count":3},
+        {"lng":120.176822,"lat":30.313001,"count":3},
+        {"lng":120.204978,"lat":30.335114,"count":2},
+        {"lng":120.204345,"lat":30.33352,"count":0},
+        {"lng":120.1829,"lat":30.326,"count":3},
+        {"lng":120.207167,"lat":30.324422,"count":2},
+        {"lng":120.208141,"lat":30.329731,"count":0},
+        {"lng":120.181293,"lat":30.328487,"count":3},
+        {"lng":120.189692,"lat":30.313979,"count":5}];
+
+        if(!isSupportCanvas()){
+            alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+        }
+        //详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+        //参数说明如下:
+        /* visible 热力图是否显示,默认为true
+         * opacity 热力的透明度,1-100
+         * radius 势力图的每个点的半径大小   
+         * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+         *	{
+                .2:'rgb(0, 255, 255)',
+                .5:'rgb(0, 110, 255)',
+                .8:'rgb(100, 0, 255)'
+            }
+            其中 key 表示插值的位置, 0~1. 
+                value 为颜色值. 
+         */
+        heatmapOverlay1 = new BMapLib.HeatmapOverlay({"radius":30});
+        heatmapOverlay2 = new BMapLib.HeatmapOverlay({"radius":30});
+        map.addOverlay(heatmapOverlay1);
+        map.addOverlay(heatmapOverlay2);
+        heatmapOverlay1.setDataSet({data:points_ds,max:100});
+        heatmapOverlay2.setDataSet({data:points_vol,max:10});
+        //是否显示热力图
+        function openHeatmap_ds(){
+            heatmapOverlay2.hide();
+            heatmapOverlay1.show();
+        }
+        function openHeatmap_vol(){
+            heatmapOverlay1.hide();
+            heatmapOverlay2.show();
+        }
+	    function closeHeatmap(){
+            heatmapOverlay1.hide();
+            heatmapOverlay2.hide();
+        }
+	    closeHeatmap();
+        function setGradient(){
+             /*格式如下所示:
+            {
+                  0:'rgb(102, 255, 0)',
+                  .5:'rgb(255, 170, 0)',
+                  1:'rgb(255, 0, 0)'
+            }*/
+             var gradient = {};
+             var colors = document.querySelectorAll("input[type='color']");
+             colors = [].slice.call(colors,0);
+             colors.forEach(function(ele){
+                gradient[ele.getAttribute("data-key")] = ele.value; 
+             });
+            heatmapOverlay1.setOptions({"gradient":gradient});
+            heatmapOverlay2.setOptions({"gradient":gradient});
+        }
+        //判断浏览区是否支持canvas
+        function isSupportCanvas(){
+            var elem = document.createElement('canvas');
+            return !!(elem.getContext && elem.getContext('2d'));
+        }
+      </script>
+</body>
+
+</html>

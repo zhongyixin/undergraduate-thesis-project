@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>zyx | 多路口协调预测</title>
+
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/iCheck/custom.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/cropper/cropper.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/nouslider/jquery.nouislider.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/select2/select2.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+
+    <link href="/static/bootstrap/css/animate.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=cuchNdNOCPPp9AUcIi5GSpYZ1lAngZv3"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                    <div class="sidebar-collapse">
+                        <ul class="nav metismenu" id="side-menu">
+                            <li class="nav-header">
+                                <div class="dropdown profile-element">
+                                    <img alt="image" class="rounded-circle" src="/static/bootstrap/img/zyx.jpg"/>
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                        <span class="block m-t-xs font-bold">ZHONG YIXIN</span>
+                                        <span class="text-muted text-xs block">管理员 <b class="caret"></b></span>
+                                    </a>
+                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                        <li><a class="dropdown-item" href="profile.html">个人信息</a></li>
+                                        <li><a class="dropdown-item" href="contacts.html">好友</a></li>
+                                        <li><a class="dropdown-item" href="mailbox.html">信箱</a></li>
+                                        <li class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="login.html">登出</a></li>
+                                    </ul>
+                                </div>
+                                <div class="logo-element">
+                                    IN+
+                                </div>
+                            </li>
+                            <li>
+                                <a href="/map_page/"><i class="fa fa-files-o"></i> <span class="nav-label">监管区域地图</span></a>
+                            </li>
+                            <li>
+                                <a href="/dashboard_2/"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">数据图表查询</span> </a>
+                            </li>
+                            <li>
+                                <a href="/predict/"><i class="fa fa-desktop"></i> <span class="nav-label">单路口信号预测</span></a>
+                            </li>             
+                            <li class="active">
+                                <a href="/predict_m/"><i class="fa fa-flask"></i></i> <span class="nav-label">多路口协调预测</span></a>
+                            </li>
+                            <li>
+                                <a href="/test/"><i class="fa fa-th-large"></i> <span class="nav-label">测试页</span>  </a>
+                            </li>
+                        </ul>
+            
+                    </div>
+            </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+            <form role="search" class="navbar-form-custom" action="search_results.html">
+                <div class="form-group">
+                    <input type="text" placeholder="请输入搜索内容" class="form-control" name="top-search" id="top-search">
+                </div>
+            </form>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <span class="m-r-sm text-muted welcome-message">欢迎来到xxx道路交通信号调控方案及预测管理后台</span>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-sign-out"></i> 注销
+                    </a>
+                </li>
+                
+            </ul>
+
+        </nav>
+        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>多路口协调信号调控方案预测</h2>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard_2/">主页</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <strong>多路口预测</strong>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>请在此处搜索并选择您需要进行信号调控方案预测的路口。</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            <form method="post" action="/predict_2/">
+                                <select name="bcross" class="form-control dual_select" multiple>
+                                        <option value="8">8 延安路-体育场路</option>
+                                        <option value="9">9 中山北路-体育场路</option>
+                                        <option value="13">13 武林路-凤起路</option>
+                                        <option value="14">14 延安路-凤起路</option>
+                                        <option value="15">15 中山北路-凤起路</option>
+                                        <option value="19">19 延安路-庆春路</option>
+                                        <option value="20">20 浣纱路-庆春路</option>
+                                        <option value="22">22 中河中路-庆春路</option>
+                                        <option value="27">27 建国北路-凤起路</option>
+                                        <option value="68">68 体育场路-环城东路</option>
+                                        <option value="70">70 建国北路-朝晖路</option>
+                                        <option value="71">71 文晖路-河东路</option>
+                                        <option value="79">79 新市街-上塘路</option>
+                                        <option value="106">106 环城北路-朝晖路</option>
+                                        <option value="157">157 上塘路-朝晖路</option>
+                                        <option value="194">194 绍兴路-德胜路</option>
+                                        <option value="195">195 绍兴路400弄-绍兴路</option>
+                                        <option value="199">199 东新路-德胜路</option>
+                                        <option value="201">201 西文街-东新路</option>
+                                        <option value="263">263 中诸葛路-德胜中路</option>
+                                        <option value="319">319 石大路-华中路</option>
+                                        <option value="320">320 石祥路-长浜路</option>
+                                        <option value="321">321 石祥路-东新路</option>
+                                        <option value="336">336 新汇路-石大路</option>
+                                        <option value="405">405 中山北路-朝晖路</option>
+                                        <option value="471">471 颜三路-碧桃巷</option>
+                                        <option value="472">472 颜三路-白石巷</option>
+                                        <option value="474">474 西文街-白石巷</option>
+                                        <option value="475">475 香积寺路-碧桃巷</option>
+                                        <option value="564">564 新汇路-八角亭街</option>
+                                        <option value="565">565 新汇路-长华街</option>
+                                        <option value="647">647 重机巷-新天地街</option>
+                                        <option value="754">754 华中南路-长城街</option>
+                                        <option value="755">755 俞章路-华中南路</option>
+                                        <option value="920">920 东文路-安桥路</option>
+                                        <option value="968">968 载歌巷-香积寺路</option>
+                                </select>
+                                <div class="ibox-content">
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="text-center">
+                                        {{error}}<br>
+                                        <button type="submit" class="btn btn-primary">获取该路口下一时刻调控方案预测结果</button>
+                                    {% csrf_token %}
+                                    </div>
+                                </div>    
+                            </form>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox ">
+                                <div class="ibox-title">
+                                    <h5>路口{{ cross }}调控方案预测结果</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                <div class="col-lg-6"> 
+                                    <div style="width:650px;height:500px;border:#ccc solid 1px;font-size:12px" id="map1"></div>
+                                </div>
+                                <div class="col-lg-6"> 
+                                    <div style="width:650px;height:500px;border:#ccc solid 1px;font-size:12px" id="map2"></div>
+                                </div>
+                                <div class="col-lg-6"> 
+                                    <h3>调控方案详情：</h3>
+                                    <div>
+                                        <table class="table">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button type="button" onclick="showphase_a1()" class="btn btn-danger m-r-sm">A相位</button>
+                                                    绿灯时间{{ result1.A }}
+                                                </td>
+                                                <td>
+                                                    <button type="button" onclick="showphase_b1()" class="btn btn-primary m-r-sm">B相位</button>
+                                                    绿灯时间{{ result1.B }}
+                                                </td>
+                                            </tr>
+                                            <tr>   
+                                                <td>
+                                                    <button type="button" onclick="showphase_c1()" class="btn btn-info m-r-sm">C相位</button>
+                                                    绿灯时间{{ result1.C }}
+                                                </td>
+                                                <td>
+                                                    <button type="button" onclick="showphase_d1()" class="btn btn-info m-r-sm">D相位</button>
+                                                    绿灯时间{{ result1.D }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button type="button" onclick="showphase_e1()" class="btn btn-success m-r-sm">E相位</button>
+                                                    绿灯时间{{ result1.E }}
+                                                </td>
+                                                <td>
+                                                    <button type="button" onclick="showphase_f1()" class="btn btn-danger m-r-sm">F相位</button>
+                                                    绿灯时间{{ result1.F }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button type="button" onclick="showphase_g1()" class="btn btn-warning m-r-sm">G相位</button>
+                                                    绿灯时间{{ result1.G }}
+                                                </td>
+                                                <td>
+                                                    <button type="button" onclick="hideall1()" class="btn btn-default m-r-sm">关闭图示</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    </div>
+                                    <div class="col-lg-6"> 
+                                        <h3>调控方案详情：</h3>
+                                        <div>
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_a()" class="btn btn-danger m-r-sm">A相位</button>
+                                                        绿灯时间{{ result2.A }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_b()" class="btn btn-primary m-r-sm">B相位</button>
+                                                        绿灯时间{{ result2.B }}
+                                                    </td>
+                                                </tr>
+                                                <tr>   
+                                                    <td>
+                                                        <button type="button" onclick="showphase_c()" class="btn btn-info m-r-sm">C相位</button>
+                                                        绿灯时间{{ result2.C }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_d()" class="btn btn-info m-r-sm">D相位</button>
+                                                        绿灯时间{{ result2.D }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_e()" class="btn btn-success m-r-sm">E相位</button>
+                                                        绿灯时间{{ result2.E }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_f()" class="btn btn-danger m-r-sm">F相位</button>
+                                                        绿灯时间{{ result2.F }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" onclick="showphase_g()" class="btn btn-warning m-r-sm">G相位</button>
+                                                        绿灯时间{{ result2.G }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" onclick="hideall()" class="btn btn-default m-r-sm">关闭图示</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+
+                                </div>
+                            </div> 
+                            </div>  
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+        </div>
+
+    <!-- Mainly scripts -->
+    <script src="/static/bootstrap/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/bootstrap/js/popper.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/bootstrap/js/inspinia.js"></script>
+    <script src="/static/bootstrap/js/plugins/pace/pace.min.js"></script>
+    <script src="/static/bootstrap/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Chosen -->
+    <script src="/static/bootstrap/js/plugins/chosen/chosen.jquery.js"></script>
+
+   <!-- JSKnob -->
+   <script src="/static/bootstrap/js/plugins/jsKnob/jquery.knob.js"></script>
+
+   <!-- Input Mask-->
+    <script src="/static/bootstrap/js/plugins/jasny/jasny-bootstrap.min.js"></script>
+
+   <!-- Data picker -->
+   <script src="/static/bootstrap/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+
+   <!-- NouSlider -->
+   <script src="/static/bootstrap/js/plugins/nouslider/jquery.nouislider.min.js"></script>
+
+   <!-- Switchery -->
+   <script src="/static/bootstrap/js/plugins/switchery/switchery.js"></script>
+
+    <!-- IonRangeSlider -->
+    <script src="/static/bootstrap/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+
+    <!-- iCheck -->
+    <script src="/static/bootstrap/js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- MENU -->
+    <script src="/static/bootstrap/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Color picker -->
+    <script src="/static/bootstrap/js/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+
+    <!-- Clock picker -->
+    <script src="/static/bootstrap/js/plugins/clockpicker/clockpicker.js"></script>
+
+    <!-- Image cropper -->
+    <script src="/static/bootstrap/js/plugins/cropper/cropper.min.js"></script>
+
+    <!-- Date range use moment.js same as full calendar plugin -->
+    <script src="/static/bootstrap/js/plugins/fullcalendar/moment.min.js"></script>
+
+    <!-- Date range picker -->
+    <script src="/static/bootstrap/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <!-- Select2 -->
+    <script src="/static/bootstrap/js/plugins/select2/select2.full.min.js"></script>
+
+    <!-- TouchSpin -->
+    <script src="/static/bootstrap/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+
+    <!-- Tags Input -->
+    <script src="/static/bootstrap/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
+    <!-- Dual Listbox -->
+    <script src="/static/bootstrap/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+           
+            $('.dual_select').bootstrapDualListbox({
+                selectorMinimalHeight: 160
+            });
+
+
+        });
+
+
+
+
+    </script>
+    <script type="text/javascript">
+        //创建和初始化地图函数：
+        function initMap(){
+          createMap();//创建地图
+          setMapEvent();//设置地图事件
+          addMapControl();//向地图添加控件
+          addMapOverlay();//向地图添加覆盖物
+        }
+        function createMap(){ 
+          map = new BMap.Map("map1"); 
+          map.centerAndZoom(new BMap.Point({{jingdu1|safe}},{{weidu1|safe}}),20);
+        }
+        function setMapEvent(){
+          map.enableScrollWheelZoom();
+          map.enableKeyboard();
+          map.enableDragging();
+          map.enableDoubleClickZoom()
+        }
+        function addClickHandler(target,window){
+          target.addEventListener("click",function(){
+            target.openInfoWindow(window);
+          });
+        }
+        function addMapOverlay(){
+          var markers = [
+          {title:{{pre1|safe}},imageOffset: {width:0,height:3},position:{lat:{{weidu1|safe}},lng:{{jingdu1|safe}}}},
+          {title:{{pre2|safe}},imageOffset: {width:0,height:3},position:{lat:{{weidu2|safe}},lng:{{jingdu2|safe}}}},
+          
+          
+          ];
+          for(var index = 0; index < markers.length; index++ ){
+            var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+            var marker = new BMap.Marker(point,{icon:new BMap.Icon("http://api.map.baidu.com/lbsapi/createmap/images/icon.png",new BMap.Size(20,25),{
+              imageOffset: new BMap.Size(markers[index].imageOffset.width,markers[index].imageOffset.height)
+            })});
+            var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+            var opts = {
+              width: 200,
+              title: markers[index].title,
+              enableMessage: false
+            };
+            var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+            marker.setLabel(label);
+            addClickHandler(marker,infoWindow);
+            map.addOverlay(marker);
+          };
+        }
+        //向地图添加控件
+        function addMapControl(){
+          var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+          scaleControl.setUnit(BMAP_UNIT_IMPERIAL);
+          map.addControl(scaleControl);
+          var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+          map.addControl(navControl);
+          var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+          map.addControl(overviewControl);
+        }
+        var map;
+          initMap();
+    var point = new BMap.Point({{jingdu1|safe}},{{weidu1|safe}});
+    var curve11 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng-0.00048,point.lat-0.000073),
+        new BMap.Point(point.lng+0.000037,point.lat-0.000509)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow1_1 = new BMap.Marker(new BMap.Point(point.lng+0.000037,point.lat-0.000509), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 335,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve11); //添加到地图中
+    map.addOverlay(vectorBOArrow1_1);
+    var curve21 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000668,point.lat-0.000013),
+        new BMap.Point(point.lng+0.000168,point.lat+0.000377)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow41 = new BMap.Marker(new BMap.Point(point.lng+0.000168,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 150,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve21); //添加到地图中
+    map.addOverlay(vectorBOArrow41);
+    var polyline11 = new BMap.Polyline([
+		new BMap.Point(point.lng-0.00048,point.lat-0.000053),
+		new BMap.Point(point.lng+0.000668,point.lat-0.000123)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow21 = new BMap.Marker(new BMap.Point(point.lng+0.000668,point.lat-0.000123), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 270,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline11); 
+    map.addOverlay(vectorBOArrow21);
+    var polyline21 = new BMap.Polyline([
+		new BMap.Point(point.lng-0.00048,point.lat+0.000027),
+		new BMap.Point(point.lng+0.000668,point.lat-0.000043)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow31 = new BMap.Marker(new BMap.Point(point.lng-0.00048,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 90,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline21);
+    map.addOverlay(vectorBOArrow31);
+    var curve31 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000068,point.lat-0.000573),
+        new BMap.Point(point.lng+0.000568,point.lat-0.000083)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow51 = new BMap.Marker(new BMap.Point(point.lng+0.000068,point.lat-0.000573), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 20,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve31); //添加到地图中
+    map.addOverlay(vectorBOArrow51);
+    var curve41 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000218,point.lat-0.000523),
+        new BMap.Point(point.lng+0.000568,point.lat-0.000173)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow61 = new BMap.Marker(new BMap.Point(point.lng+0.000568,point.lat-0.000173), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 240,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve41); //添加到地图中    
+    map.addOverlay(vectorBOArrow61);
+    var curve51 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000168,point.lat+0.000377),
+        new BMap.Point(point.lng-0.000382,point.lat-0.000043)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow71 = new BMap.Marker(new BMap.Point(point.lng+0.000168,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 200,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve51); //添加到地图中    
+    map.addOverlay(vectorBOArrow71);
+    var curve61 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000068,point.lat+0.000377),
+        new BMap.Point(point.lng-0.000382,point.lat+0.000027)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow81 = new BMap.Marker(new BMap.Point(point.lng-0.000382,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 70,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve61); //添加到地图中    
+    map.addOverlay(vectorBOArrow81);
+    var polyline31 = new BMap.Polyline([
+		new BMap.Point(point.lng+0.000108,point.lat+0.000377),
+		new BMap.Point(point.lng+0.000103,point.lat-0.000509)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow91 = new BMap.Marker(new BMap.Point(point.lng+0.000103,point.lat-0.000509), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 0,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline31);
+    map.addOverlay(vectorBOArrow91);
+    var polyline41 = new BMap.Polyline([
+		new BMap.Point(point.lng+0.000208,point.lat+0.000377),
+		new BMap.Point(point.lng+0.000198,point.lat-0.000509)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow101 = new BMap.Marker(new BMap.Point(point.lng+0.000208,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 180,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline41);
+    map.addOverlay(vectorBOArrow101);
+    var curve71 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng-0.00048,point.lat+0.000027),
+        new BMap.Point(point.lng+0.000128,point.lat-0.000509)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow111 = new BMap.Marker(new BMap.Point(point.lng-0.00048,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 110,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve71); //添加到地图中
+    map.addOverlay(vectorBOArrow111);
+    var curve81 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000668,point.lat-0.000173),
+        new BMap.Point(point.lng+0.000068,point.lat+0.000377)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow121 = new BMap.Marker(new BMap.Point(point.lng+0.000668,point.lat-0.000173), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 290,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve81); //添加到地图中
+    map.addOverlay(vectorBOArrow121);
+    function showphase_a1(){
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_f1();
+        hidephase_g1();
+        curve11.show(); curve21.show(); polyline11.show(); polyline21.show();
+        vectorBOArrow1_1.show(); vectorBOArrow21.show(); vectorBOArrow31.show(); vectorBOArrow41.show();
+    }
+    function hidephase_a1(){
+        curve11.hide(); curve21.hide(); polyline11.hide(); polyline21.hide();
+        vectorBOArrow1_1.hide(); vectorBOArrow21.hide(); vectorBOArrow31.hide(); vectorBOArrow41.hide();
+    }
+    function showphase_b1(){
+        hidephase_a1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_f1();
+        hidephase_g1();
+        curve21.show(); polyline21.show(); curve31.show(); curve41.show();
+        vectorBOArrow41.show(); vectorBOArrow31.show(); vectorBOArrow51.show(); vectorBOArrow61.show();
+    }
+    function hidephase_b1(){
+        curve21.hide(); polyline21.hide(); curve31.hide(); curve41.hide();
+        vectorBOArrow41.hide(); vectorBOArrow31.hide(); vectorBOArrow51.hide(); vectorBOArrow61.hide();
+    }
+    function showphase_c1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_f1();
+        hidephase_g1();
+        curve31.show(); curve41.show(); curve51.show(); curve61.show();
+        vectorBOArrow51.show(); vectorBOArrow61.show(); vectorBOArrow71.show(); vectorBOArrow81.show();
+    }
+    function hidephase_c1(){
+        curve31.hide(); curve41.hide(); curve51.hide(); curve61.hide();
+        vectorBOArrow51.hide(); vectorBOArrow61.hide(); vectorBOArrow71.hide(); vectorBOArrow81.hide();
+    }
+    function showphase_d1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_e1();
+        hidephase_f1();
+        hidephase_g1();
+        curve61.show(); curve11.show(); curve41.show(); polyline31.show(); polyline41.show();
+        vectorBOArrow81.show(); vectorBOArrow1_1.show(); vectorBOArrow61.show(); vectorBOArrow91.show(); vectorBOArrow101.show();
+    }
+    function hidephase_d1(){
+        curve61.hide(); curve11.hide(); curve41.hide(); polyline31.hide(); polyline41.hide();
+        vectorBOArrow81.hide(); vectorBOArrow1_1.hide(); vectorBOArrow61.hide(); vectorBOArrow91.hide(); vectorBOArrow101.hide();
+    }
+    function showphase_e1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_f1();
+        hidephase_g1();
+        curve61.show(); curve51.show(); curve11.show(); polyline11.show();
+        vectorBOArrow81.show(); vectorBOArrow71.show(); vectorBOArrow1_1.show(); vectorBOArrow21.show();
+    }
+    function hidephase_e1(){
+        curve61.hide(); curve51.hide(); curve11.hide(); polyline11.hide();
+        vectorBOArrow81.hide(); vectorBOArrow71.hide(); vectorBOArrow1_1.hide(); vectorBOArrow21.hide();
+    }
+    function showphase_f1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_g1();
+        curve11.show(); curve71.show(); polyline41.show(); curve41.show();
+        vectorBOArrow1_1.show(); vectorBOArrow111.show(); vectorBOArrow101.show(); vectorBOArrow61.show();
+    }
+    function hidephase_f1(){
+        curve11.hide(); curve71.hide(); polyline41.hide(); curve41.hide();
+        vectorBOArrow1_1.hide(); vectorBOArrow111.hide(); vectorBOArrow101.hide(); vectorBOArrow61.hide();
+    }
+    function showphase_g1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_f1();
+        curve11.show(); curve71.show(); curve21.show(); curve81.show();
+        vectorBOArrow1_1.show(); vectorBOArrow111.show(); vectorBOArrow41.show(); vectorBOArrow121.show();
+    }
+    function hidephase_g1(){
+        curve11.hide(); curve71.hide(); curve21.hide(); curve81.hide();
+        vectorBOArrow1_1.hide(); vectorBOArrow111.hide(); vectorBOArrow41.hide(); vectorBOArrow121.hide();
+    }
+    function hideall1(){
+        hidephase_a1();
+        hidephase_b1();
+        hidephase_c1();
+        hidephase_d1();
+        hidephase_e1();
+        hidephase_f1();
+        hidephase_g1();
+    }
+    hideall1();
+    </script>
+    <script type="text/javascript">
+        //创建和初始化地图函数：
+        function initMap(){
+          createMap();//创建地图
+          setMapEvent();//设置地图事件
+          addMapControl();//向地图添加控件
+          addMapOverlay();//向地图添加覆盖物
+        }
+        function createMap(){ 
+          map = new BMap.Map("map2"); 
+          map.centerAndZoom(new BMap.Point({{jingdu2|safe}},{{weidu2|safe}}),20);
+        }
+        function setMapEvent(){
+          map.enableScrollWheelZoom();
+          map.enableKeyboard();
+          map.enableDragging();
+          map.enableDoubleClickZoom()
+        }
+        function addClickHandler(target,window){
+          target.addEventListener("click",function(){
+            target.openInfoWindow(window);
+          });
+        }
+        function addMapOverlay(){
+          var markers = [
+          {title:{{pre1|safe}},imageOffset: {width:0,height:3},position:{lat:{{weidu1|safe}},lng:{{jingdu1|safe}}}},
+          {title:{{pre2|safe}},imageOffset: {width:0,height:3},position:{lat:{{weidu2|safe}},lng:{{jingdu2|safe}}}},
+          
+          
+          ];
+          for(var index = 0; index < markers.length; index++ ){
+            var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+            var marker = new BMap.Marker(point,{icon:new BMap.Icon("http://api.map.baidu.com/lbsapi/createmap/images/icon.png",new BMap.Size(20,25),{
+              imageOffset: new BMap.Size(markers[index].imageOffset.width,markers[index].imageOffset.height)
+            })});
+            var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+            var opts = {
+              width: 200,
+              title: markers[index].title,
+              enableMessage: false
+            };
+            var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+            marker.setLabel(label);
+            addClickHandler(marker,infoWindow);
+            map.addOverlay(marker);
+          };
+        }
+        //向地图添加控件
+        function addMapControl(){
+          var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+          scaleControl.setUnit(BMAP_UNIT_IMPERIAL);
+          map.addControl(scaleControl);
+          var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+          map.addControl(navControl);
+          var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+          map.addControl(overviewControl);
+        }
+        var map;
+          initMap();
+    var point = new BMap.Point({{jingdu2|safe}},{{weidu2|safe}});
+    var curve1 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng-0.00048,point.lat-0.000073),
+        new BMap.Point(point.lng+0.000037,point.lat-0.000509)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow1 = new BMap.Marker(new BMap.Point(point.lng+0.000037,point.lat-0.000509), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 335,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve1); //添加到地图中
+    map.addOverlay(vectorBOArrow1);
+    var curve2 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000668,point.lat-0.000013),
+        new BMap.Point(point.lng+0.000168,point.lat+0.000377)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow4 = new BMap.Marker(new BMap.Point(point.lng+0.000168,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 150,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve2); //添加到地图中
+    map.addOverlay(vectorBOArrow4);
+    var polyline1 = new BMap.Polyline([
+		new BMap.Point(point.lng-0.00048,point.lat-0.000053),
+		new BMap.Point(point.lng+0.000668,point.lat-0.000123)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow2 = new BMap.Marker(new BMap.Point(point.lng+0.000668,point.lat-0.000123), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 270,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline1); 
+    map.addOverlay(vectorBOArrow2);
+    var polyline2 = new BMap.Polyline([
+		new BMap.Point(point.lng-0.00048,point.lat+0.000027),
+		new BMap.Point(point.lng+0.000668,point.lat-0.000043)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow3 = new BMap.Marker(new BMap.Point(point.lng-0.00048,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 90,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline2);
+    map.addOverlay(vectorBOArrow3);
+    var curve3 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000068,point.lat-0.000573),
+        new BMap.Point(point.lng+0.000568,point.lat-0.000083)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow5 = new BMap.Marker(new BMap.Point(point.lng+0.000068,point.lat-0.000573), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 20,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve3); //添加到地图中
+    map.addOverlay(vectorBOArrow5);
+    var curve4 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000218,point.lat-0.000523),
+        new BMap.Point(point.lng+0.000568,point.lat-0.000173)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow6 = new BMap.Marker(new BMap.Point(point.lng+0.000568,point.lat-0.000173), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 240,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve4); //添加到地图中    
+    map.addOverlay(vectorBOArrow6);
+    var curve5 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000168,point.lat+0.000377),
+        new BMap.Point(point.lng-0.000382,point.lat-0.000043)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow7 = new BMap.Marker(new BMap.Point(point.lng+0.000168,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 200,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve5); //添加到地图中    
+    map.addOverlay(vectorBOArrow7);
+    var curve6 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000068,point.lat+0.000377),
+        new BMap.Point(point.lng-0.000382,point.lat+0.000027)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow8 = new BMap.Marker(new BMap.Point(point.lng-0.000382,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 70,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve6); //添加到地图中    
+    map.addOverlay(vectorBOArrow8);
+    var polyline3 = new BMap.Polyline([
+		new BMap.Point(point.lng+0.000108,point.lat+0.000377),
+		new BMap.Point(point.lng+0.000103,point.lat-0.000509)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow9 = new BMap.Marker(new BMap.Point(point.lng+0.000103,point.lat-0.000509), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 0,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline3);
+    map.addOverlay(vectorBOArrow9);
+    var polyline4 = new BMap.Polyline([
+		new BMap.Point(point.lng+0.000208,point.lat+0.000377),
+		new BMap.Point(point.lng+0.000198,point.lat-0.000509)
+	], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8});   //创建折线
+    var vectorBOArrow10 = new BMap.Marker(new BMap.Point(point.lng+0.000208,point.lat+0.000377), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 180,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+	map.addOverlay(polyline4);
+    map.addOverlay(vectorBOArrow10);
+    var curve7 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng-0.00048,point.lat+0.000027),
+        new BMap.Point(point.lng+0.000128,point.lat-0.000509)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow11 = new BMap.Marker(new BMap.Point(point.lng-0.00048,point.lat+0.000027), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 110,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve7); //添加到地图中
+    map.addOverlay(vectorBOArrow11);
+    var curve8 = new BMapLib.CurveLine([
+        new BMap.Point(point.lng+0.000668,point.lat-0.000173),
+        new BMap.Point(point.lng+0.000068,point.lat+0.000377)
+    ], {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8}); //创建弧线对象
+    var vectorBOArrow12 = new BMap.Marker(new BMap.Point(point.lng+0.000668,point.lat-0.000173), {
+  // 初始化方向向下的开放式箭头
+        icon: new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+        scale: 2,
+        strokeWeight: 1,
+        rotation: 290,
+        fillColor: 'blue',
+        fillOpacity: 0.8
+        })
+    });
+    map.addOverlay(curve8); //添加到地图中
+    map.addOverlay(vectorBOArrow12);
+    function showphase_a(){
+        hidephase_b();
+        hidephase_c();
+        hidephase_d();
+        hidephase_e();
+        hidephase_f();
+        hidephase_g();
+        curve1.show(); curve2.show(); polyline1.show(); polyline2.show();
+        vectorBOArrow1.show(); vectorBOArrow2.show(); vectorBOArrow3.show(); vectorBOArrow4.show();
+    }
+    function hidephase_a(){
+        curve1.hide(); curve2.hide(); polyline1.hide(); polyline2.hide();
+        vectorBOArrow1.hide(); vectorBOArrow2.hide(); vectorBOArrow3.hide(); vectorBOArrow4.hide();
+    }
+    function showphase_b(){
+        hidephase_a();
+        hidephase_c();
+        hidephase_d();
+        hidephase_e();
+        hidephase_f();
+        hidephase_g();
+        curve2.show(); polyline2.show(); curve3.show(); curve4.show();
+        vectorBOArrow4.show(); vectorBOArrow3.show(); vectorBOArrow5.show(); vectorBOArrow6.show();
+    }
+    function hidephase_b(){
+        curve2.hide(); polyline2.hide(); curve3.hide(); curve4.hide();
+        vectorBOArrow4.hide(); vectorBOArrow3.hide(); vectorBOArrow5.hide(); vectorBOArrow6.hide();
+    }
+    function showphase_c(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_d();
+        hidephase_e();
+        hidephase_f();
+        hidephase_g();
+        curve3.show(); curve4.show(); curve5.show(); curve6.show();
+        vectorBOArrow5.show(); vectorBOArrow6.show(); vectorBOArrow7.show(); vectorBOArrow8.show();
+    }
+    function hidephase_c(){
+        curve3.hide(); curve4.hide(); curve5.hide(); curve6.hide();
+        vectorBOArrow5.hide(); vectorBOArrow6.hide(); vectorBOArrow7.hide(); vectorBOArrow8.hide();
+    }
+    function showphase_d(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_c();
+        hidephase_e();
+        hidephase_f();
+        hidephase_g();
+        curve6.show(); curve1.show(); curve4.show(); polyline3.show(); polyline4.show();
+        vectorBOArrow8.show(); vectorBOArrow1.show(); vectorBOArrow6.show(); vectorBOArrow9.show(); vectorBOArrow10.show();
+    }
+    function hidephase_d(){
+        curve6.hide(); curve1.hide(); curve4.hide(); polyline3.hide(); polyline4.hide();
+        vectorBOArrow8.hide(); vectorBOArrow1.hide(); vectorBOArrow6.hide(); vectorBOArrow9.hide(); vectorBOArrow10.hide();
+    }
+    function showphase_e(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_c();
+        hidephase_d();
+        hidephase_f();
+        hidephase_g();
+        curve6.show(); curve5.show(); curve1.show(); polyline1.show();
+        vectorBOArrow8.show(); vectorBOArrow7.show(); vectorBOArrow1.show(); vectorBOArrow2.show();
+    }
+    function hidephase_e(){
+        curve6.hide(); curve5.hide(); curve1.hide(); polyline1.hide();
+        vectorBOArrow8.hide(); vectorBOArrow7.hide(); vectorBOArrow1.hide(); vectorBOArrow2.hide();
+    }
+    function showphase_f(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_c();
+        hidephase_d();
+        hidephase_e();
+        hidephase_g();
+        curve1.show(); curve7.show(); polyline4.show(); curve4.show();
+        vectorBOArrow1.show(); vectorBOArrow11.show(); vectorBOArrow10.show(); vectorBOArrow6.show();
+    }
+    function hidephase_f(){
+        curve1.hide(); curve7.hide(); polyline4.hide(); curve4.hide();
+        vectorBOArrow1.hide(); vectorBOArrow11.hide(); vectorBOArrow10.hide(); vectorBOArrow6.hide();
+    }
+    function showphase_g(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_c();
+        hidephase_d();
+        hidephase_e();
+        hidephase_f();
+        curve1.show(); curve7.show(); curve2.show(); curve8.show();
+        vectorBOArrow1.show(); vectorBOArrow11.show(); vectorBOArrow4.show(); vectorBOArrow12.show();
+    }
+    function hidephase_g(){
+        curve1.hide(); curve7.hide(); curve2.hide(); curve8.hide();
+        vectorBOArrow1.hide(); vectorBOArrow11.hide(); vectorBOArrow4.hide(); vectorBOArrow12.hide();
+    }
+    function hideall(){
+        hidephase_a();
+        hidephase_b();
+        hidephase_c();
+        hidephase_d();
+        hidephase_e();
+        hidephase_f();
+        hidephase_g();
+    }
+    hideall();
+    </script>
+</body>
+
+</html>

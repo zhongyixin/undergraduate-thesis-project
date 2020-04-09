@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="/static/echarts.min.js"></script>
+    <script src="/static/bootstrap/js/jquery-2.1.1.js"></script>
+</head>
+<body>
+<div   style="height:300px;"id="echarts-line"></div>
+
+<script>
+    $(function () {
+        var server_info;
+
+        var myChart = echarts.init(document.getElementById('echarts-line'));
+        var option = {
+            title: {
+                text: '机柜总数'
+            },
+            tooltip: {},
+            legend: {
+                data:['总数']
+            },
+            xAxis: {
+                data: {{ name  | safe }}    //第一次访问页面时，先从后端返回一个最新的数据，这样子就不会需要人们等着更新数据。
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: {{ jq | safe }} //第一次访问页面时，先从后端返回一个最新的数据
+            }]
+        };
+        myChart.setOption(option, true);
+
+        setInterval( function () {     //AJAX去获取数据通过showapi
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/jigui/showapi',
+                    dataType: 'json',
+                    success: function (json) {
+                        server_info = eval(json);
+                    }
+                });
+
+                    option.xAxis.data =  server_info.name;   //赋值
+                    option.series[0].data = server_info.jq;
+                    myChart.setOption(option, true);
+
+                }, 2000);  //每隔2秒 获取一次，重新生成值
+
+         window.onresize = function () {
+            myChart.resize();      //根据页面大小重新定义图形大小
+        };
+    });
+
+</script>
+</body>
+</html>
